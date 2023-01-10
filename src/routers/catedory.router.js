@@ -6,5 +6,6 @@ const validateCategory = require('../middleware/validateCategoryFields');
 const router = express.Router();
 
 router.post('/', validateToken, validateCategory, categoryController.createCategory);
+router.get('/', validateToken, categoryController.listCategories);
 
 module.exports = router;
