@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const { validateNewUser } = require('./validations/validateInputValues');
+const { validateNewUser, validateId } = require('./validations/validateInputValues');
 const { createToken } = require('../auth/jwtFunctions');
 
 const createUser = async (user) => {
@@ -25,7 +25,22 @@ const findAllUsers = async () => {
   return { type: null, message: users };
 };
 
+const findUserById = async (id) => {
+  const error = validateId(id);
+  if (error.type) {
+    return error;
+  }
+  const user = await User.findByPk(id);
+  if (!user) {
+    return { type: 'NOT_FOUND', message: 'User does not exist' };
+  }
+
+  const { password: _, ...userWithoutPassword } = user.dataValues;
+  return { type: null, message: userWithoutPassword };
+};
+
 module.exports = {
   createUser,
   findAllUsers,
+  findUserById,
 };

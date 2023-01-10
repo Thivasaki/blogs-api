@@ -1,4 +1,4 @@
-const { loginSchema, createUserSchema } = require('./schema');
+const { loginSchema, createUserSchema, idSchema } = require('./schema');
 
 const validateLogin = (login) => {
   const { error } = loginSchema.validate(login);
@@ -16,7 +16,16 @@ const validateNewUser = (user) => {
   return { type: null, message: '' };
 };
 
+const validateId = (id) => {
+  const { error } = idSchema.validate(id);
+  if (error) {
+    return { type: 'INPUT_INVALID', message: error.message };
+  }
+  return { type: null, message: '' };
+};
+
 module.exports = {
   validateLogin,
   validateNewUser,
+  validateId,
 };
