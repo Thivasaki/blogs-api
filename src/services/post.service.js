@@ -1,4 +1,5 @@
 const { BlogPost, User, PostCategory, Category } = require('../models');
+const { validateId } = require('./validations/validateInputValues');
 
 const createPost = async (post, payload) => {
   const { title, content, categoryIds } = post;
@@ -30,7 +31,23 @@ const findAllPost = async () => {
   return { type: null, message: allPosts };
 };
 
+const findPostById = async (id) => {
+  const error = validateId(id);
+  if (error.type) {
+    return error;
+  }
+  const post = await BlogPost.findByPk(id, { include: [
+    { model: User, as: 'user', attributes: { exclude: ['password'] } },
+    { model: Category, as: 'categories', through: { attributes: [] } }] });
+  if (!post) {
+    return { type: 'NOT_FOUND', message: 'Post does not exist' };
+  }
+
+  return { type: null, message: post };
+};
+
 module.exports = {
   createPost,
   findAllPost,
+  findPostById,
 };
