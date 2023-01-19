@@ -3,7 +3,7 @@ const { validateId } = require('./validations/validateInputValues');
 
 const createPost = async (post, payload) => {
   const { title, content, categoryIds } = post;
-  const findUser = await User.findOne({ where: payload.email });
+  const findUser = await User.findOne({ where: payload.data });
 
   const { count } = await Category.findAndCountAll({ where: { id: categoryIds } });
   if (count !== categoryIds.length) {
@@ -75,7 +75,6 @@ const findPost = await BlogPost.findByPk(postId);
 if (!findPost) {
   return { type: 'NOT_FOUND', message: 'Post does not exist' };
 } 
-
 if (findUser.dataValues.id !== findPost.dataValues.userId) {
   return { type: 'UNAUTHORIZED_USER', message: 'Unauthorized user' };
 }
