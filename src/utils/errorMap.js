@@ -5,6 +5,7 @@ const errorMap = {
   INPUT_ALREADY_EXIST: 409,
   NOT_FOUND: 404,
   STRING_MIN: 422,
+  UNAUTHORIZED_USER: 401,
 };
 
 const mapError = (type) => errorMap[type] || 500;

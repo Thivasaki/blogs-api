@@ -46,8 +46,31 @@ const findPostById = async (id) => {
   return { type: null, message: post };
 };
 
+const updatePostById = async (postUpdate, payload, postId) => {
+  const { title, content } = postUpdate;
+
+  const findUser = await User.findOne({ where: payload.data });
+  const findPost = await BlogPost.findByPk(postId);
+  console.log(findUser);
+  if (findUser.dataValues.id !== findPost.dataValues.userId) {
+    return { type: 'UNAUTHORIZED_USER', message: 'Unauthorized user' };
+  }
+
+  await BlogPost.update(
+    { title, content },
+    { where: { id: postId } },
+  );
+
+  const updatedPost = await BlogPost.findByPk(postId, { include: [
+    { model: User, as: 'user', attributes: { exclude: ['password'] } },
+    { model: Category, as: 'categories', through: { attributes: [] } }] });
+
+  return { type: null, message: updatedPost };
+};
+
 module.exports = {
   createPost,
   findAllPost,
   findPostById,
+  updatePostById,
 };
