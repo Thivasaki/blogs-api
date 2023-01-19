@@ -10,5 +10,6 @@ router.post('/', validatePostFiels, validateToken, postController.createPost);
 router.get('/', validateToken, postController.listPosts);
 router.get('/:id', validateToken, postController.getPostById);
 router.put('/:id', validateUpdatePostFiels, validateToken, postController.updatePost);
+router.delete('/:id', validateToken, postController.deletePost);
 
 module.exports = router;

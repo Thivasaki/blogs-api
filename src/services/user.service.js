@@ -39,8 +39,19 @@ const findUserById = async (id) => {
   return { type: null, message: userWithoutPassword };
 };
 
+const deleteUser = async (payload) => {
+const user = await User.findOne({ where: payload.data });
+
+await User.destroy(
+  { where: { id: user.dataValues.id } },
+);
+
+return { type: null };
+};
+
 module.exports = {
   createUser,
   findAllUsers,
   findUserById,
+  deleteUser,
 };

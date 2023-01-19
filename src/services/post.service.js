@@ -51,7 +51,7 @@ const updatePostById = async (postUpdate, payload, postId) => {
 
   const findUser = await User.findOne({ where: payload.data });
   const findPost = await BlogPost.findByPk(postId);
-  console.log(findUser);
+
   if (findUser.dataValues.id !== findPost.dataValues.userId) {
     return { type: 'UNAUTHORIZED_USER', message: 'Unauthorized user' };
   }
@@ -68,9 +68,28 @@ const updatePostById = async (postUpdate, payload, postId) => {
   return { type: null, message: updatedPost };
 };
 
+const deletePost = async (payload, postId) => {
+const findUser = await User.findOne({ where: payload.data });
+const findPost = await BlogPost.findByPk(postId);
+
+if (!findPost) {
+  return { type: 'NOT_FOUND', message: 'Post does not exist' };
+} 
+
+if (findUser.dataValues.id !== findPost.dataValues.userId) {
+  return { type: 'UNAUTHORIZED_USER', message: 'Unauthorized user' };
+}
+
+await BlogPost.destroy(
+  { where: { id: postId } },
+);
+return { type: null };
+};
+
 module.exports = {
   createPost,
   findAllPost,
   findPostById,
   updatePostById,
+  deletePost,
 };

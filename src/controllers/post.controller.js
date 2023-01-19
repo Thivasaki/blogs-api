@@ -33,9 +33,20 @@ const updatePost = async (req, res) => {
   res.status(200).json(message);
 };
 
+const deletePost = async (req, res) => {
+  const { payload, params } = req;
+  const { type, message } = await postService.deletePost(payload, params.id);
+  if (type) {
+    console.log(message);
+    return res.status(errorMap.mapError(type)).json({ message });
+  }
+  res.status(204).json();
+};
+
 module.exports = {
   createPost,
   listPosts,
   getPostById,
   updatePost,
+  deletePost,
 };
