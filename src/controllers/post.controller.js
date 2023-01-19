@@ -10,6 +10,12 @@ const createPost = async (req, res) => {
   res.status(201).json(message);
 };
 
+const listPosts = async (req, res) => {
+  const { message } = await postService.findAllPost();
+  res.status(200).json(message);
+};
+
 module.exports = {
   createPost,
+  listPosts,
 };

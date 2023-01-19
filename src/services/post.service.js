@@ -20,13 +20,17 @@ const createPost = async (post, payload) => {
     return templateElement;
   });
   await PostCategory.bulkCreate(templatePostCategoryDB);
-// Primeiro: extrair os elementos do parametro e adicionar no BlogPostBD
-// Segundo: fazer um bulkCreate no PostCategoryDB
-// Terceiro: retornar as novas informaçoes criadas
-// Quarto: Validar se os categoryIds enviados realmente existem
   return { type: null, message: findNewPost };
+};
+
+const findAllPost = async () => {
+  const allPosts = await BlogPost.findAll({ include: [
+    { model: User, as: 'user', attributes: { exclude: ['password'] } },
+    { model: Category, as: 'categories', through: { attributes: [] } }] });
+  return { type: null, message: allPosts };
 };
 
 module.exports = {
   createPost,
+  findAllPost,
 };
